@@ -20,6 +20,16 @@ const commentReducer = (state = initialState, action) => {
                 ...state,
                 comments: [action.payload, ...state.comments]
             };
+        case 'DELETE_COMMENT':
+            return {
+                ...state,
+                comments: state.comments.filter(comment => comment.id !== action.payload)
+            };
+        case 'UPDAE_COMMENT':
+            return {
+                ...state,
+                comments: state.comments.filter(comment => comment.id === action.payload.id ? comment = action.payload : comment)
+            };
         default:
             return state;
     }

@@ -21,3 +21,18 @@ export const createComment = comment => async dispatch => {
         payload: res.data
     })
 }
+export const deletComment = id => async dispatch => {
+    await axios.delete(`https://jsonplaceholder.typicode.com/comments/${id}`);
+    dispatch({
+        type: 'DELETE_COMMENT',
+        payload: id
+    })
+}
+
+export const editComment = (id, comment) => async dispatch => {
+    const res = await axios.put(`https://jsonplaceholder.typicode.com/comments/${id}`, comment);
+    dispatch({
+        type: 'UPDATE_COMMENT',
+        payload: res.data
+    })
+}

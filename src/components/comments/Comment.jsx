@@ -4,7 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { getComment } from "../../actions/CommentsAction";
+import { getComment, deletComment } from "../../actions/CommentsAction";
+import { Link } from "react-router-dom";
 
 import {
   CardActions,
@@ -33,14 +34,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Comment = (props) => {
+  // Add classes
   const classes = useStyles();
-
+  // Execute actions methods
   const dispatch = useDispatch();
-
+  // Read from the gloabl state
   const comment = useSelector((state) => state.comment.comment);
+  // Return the segement dynamic
   const postID = props.match.params.postID;
+  // In mounting the page
   useEffect(() => dispatch(getComment(postID)), []);
-
+  // Remove methode
+  const remove = (id) => {
+    dispatch(deletComment(id));
+    props.history.push("/comments");
+  };
   return (
     <Fragment>
       <Container className={classes.comment}>
@@ -74,18 +82,21 @@ const Comment = (props) => {
               <CardActions>
                 <Button
                   variant="contained"
+                  onClick={() => remove(postID)}
                   color="secondary"
                   startIcon={<DeleteIcon />}
                 >
                   Delete
                 </Button>
-                <Button
-                  variant="contained"
-                  color="default"
-                  startIcon={<EditIcon />}
-                >
-                  Edit
-                </Button>
+                <Link className={classes.link} to={`/edit/${comment.id}`}>
+                  <Button
+                    variant="contained"
+                    color="default"
+                    startIcon={<EditIcon />}
+                  >
+                    Edit
+                  </Button>
+                </Link>
               </CardActions>
             </Card>
           </Grid>

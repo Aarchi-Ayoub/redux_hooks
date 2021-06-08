@@ -1,11 +1,7 @@
-import React, { Fragment, useState } from "react";
-
-import { v4 as uuidv4 } from "uuid";
-
-import { useDispatch } from "react-redux";
+import React, { Fragment, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getComment, editComment } from "../../actions/CommentsAction";
 import { makeStyles } from "@material-ui/core/styles";
-import { createComment } from "../../actions/CommentsAction";
-
 import {
   Grid,
   Typography,
@@ -13,43 +9,46 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
-
 const useStyles = makeStyles((theme) => ({
   newComment: {
     marginTop: "120px",
   },
 }));
-const Create = (props) => {
+const Edit = (props) => {
   // Add classes
   const classes = useStyles();
-  // Execute actions methods
-  const dispatch = useDispatch();
   // State for stoking data
   const [comment, setComment] = useState({
-    id: uuidv4(),
+    id: "",
     name: "",
     email: "",
     body: "",
   });
+  // Execute actions methods
+  const dispatch = useDispatch();
+  // Read from the gloabl state
+  const theComment = useSelector((state) => state.comment.comment);
+  // Return the segement dynamic
+  const postID = props.match.params.postID;
+  // In mounting the page
+  useEffect(() => {
+    dispatch(getComment(postID));
+    setComment({
+      id: theComment.id,
+      name: theComment.name,
+      email: theComment.email,
+      body: theComment.body,
+    });
+  }, []);
   // Set the state
   const hendelChange = (e) => {
     setComment({ ...comment, [e.target.name]: e.target.value });
   };
-  // clear the state
-  const clearState = () => {
-    setComment({
-      id: "",
-      name: "",
-      email: "",
-      body: "",
-    });
-  };
   // Submt from
   const onsubmit = (e) => {
     e.preventDefault();
-    dispatch(createComment(comment));
+    dispatch(editComment(postID, comment));
     props.history.push(`/comment/${comment.id}`);
-    clearState();
   };
   return (
     <Fragment>
@@ -119,10 +118,9 @@ const Create = (props) => {
               <Button
                 onClick={(e) => onsubmit(e)}
                 variant="contained"
-                color="primary"
                 size="large"
               >
-                Create
+                Update
               </Button>
             </center>
           </Grid>
@@ -132,4 +130,4 @@ const Create = (props) => {
   );
 };
 
-export default Create;
+export default Edit;

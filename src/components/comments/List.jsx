@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import { getComments } from "../../actions/CommentsAction";
+import { getComments, deletComment } from "../../actions/CommentsAction";
 
 import { Link, withRouter } from "react-router-dom";
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     fontSize: 24,
-    color: "Black",
+    color: "#3f51b5",
     textDecoration: "none",
   },
   pos: {
@@ -39,56 +39,68 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const List = (props) => {
+  // Adding classs
   const classes = useStyles();
-
+  // Execute action methods
   const dispatch = useDispatch();
-
+  // Read from the gloabl state
   const comments = useSelector((state) => state.comment.comments);
-
+  // In mounting the page
   useEffect(() => dispatch(getComments()), []);
-
+  // Props
   const { history } = props;
-
+  // Routing
   const addRoute = () => {
     history.push("/create");
   };
+  // Delete
+  const remove = (id) => {
+    dispatch(deletComment(id));
+  };
+  // Make a card
   const commentsCard = () => {
-    return comments.map((comment) => (
-      <Grid item xs={12} md={4} key={comment.id}>
-        <Card className={classes.root}>
-          <CardContent>
-            <Typography
-              className={classes.title}
-              color="textSecondary"
-              gutterBottom
-            >
-              <Link className={classes.link} to={`/comment/${comment.id}`}>
-                {comment.name}
+    return (
+      comments &&
+      comments.map((comment) => (
+        <Grid item xs={12} md={4} sm={6} key={comment.id}>
+          <Card className={classes.root}>
+            <CardContent>
+              <Typography
+                className={classes.title}
+                color="textSecondary"
+                gutterBottom
+              >
+                <Link className={classes.link} to={`/comment/${comment.id}`}>
+                  {comment.name}
+                </Link>
+              </Typography>
+              <Typography variant="body2" component="p">
+                {comment.body}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button
+                onClick={() => remove(comment.id)}
+                variant="contained"
+                color="secondary"
+                startIcon={<DeleteIcon />}
+              >
+                Delete
+              </Button>
+              <Link className={classes.link} to={`/edit/${comment.id}`}>
+                <Button
+                  variant="contained"
+                  color="default"
+                  startIcon={<EditIcon />}
+                >
+                  Edit
+                </Button>
               </Link>
-            </Typography>
-            <Typography variant="body2" component="p">
-              {comment.body}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<DeleteIcon />}
-            >
-              Delete
-            </Button>
-            <Button
-              variant="contained"
-              color="default"
-              startIcon={<EditIcon />}
-            >
-              Edit
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-    ));
+            </CardActions>
+          </Card>
+        </Grid>
+      ))
+    );
   };
   return (
     <Fragment>

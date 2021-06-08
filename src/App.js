@@ -11,6 +11,7 @@ const { default: Home } = require("./components/pages/Home");
 const { default: About } = require("./components/pages/About");
 const { default: Comment } = require("./components/comments/Comment");
 const { default: Create } = require("./components/comments/Create");
+const { default: Edit } = require("./components/comments/Edit");
 
 function App() {
   const store = createStore(
@@ -32,6 +33,7 @@ function App() {
             <Route exact component={List} path="/comments" />
             <Route exact component={Comment} path="/comment/:postID" />
             <Route exact component={Create} path="/create" />
+            <Route exact component={Edit} path="/edit/:postID" />
           </Switch>{" "}
         </BrowserRouter>{" "}
       </div>{" "}
