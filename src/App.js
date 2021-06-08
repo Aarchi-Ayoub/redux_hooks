@@ -1,17 +1,18 @@
+import React from "react";
 import { createStore, compose, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import rootReducers from "./reducers";
 import thunk from "redux-thunk";
 
-const { BrowserRouter, Switch, Route } = require("react-router-dom");
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-const { default: Navbar } = require("./components/navbar/Navbar");
-const { default: List } = require("./components/comments/List");
-const { default: Home } = require("./components/pages/Home");
-const { default: About } = require("./components/pages/About");
-const { default: Comment } = require("./components/comments/Comment");
-const { default: Create } = require("./components/comments/Create");
-const { default: Edit } = require("./components/comments/Edit");
+import Navbar from "./components/navbar/Navbar";
+import List from "./components/comments/List";
+import Home from "./components/pages/Home";
+import About from "./components/pages/About";
+import Comment from "./components/comments/Comment";
+import Create from "./components/comments/Create";
+import Edit from "./components/comments/Edit";
 
 function App() {
   const store = createStore(
